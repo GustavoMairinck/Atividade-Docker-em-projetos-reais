@@ -1,0 +1,43 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: leds-agenda-api
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - leds-network
+
+  db:
+    image: postgres:16-alpine
+    container_name: leds-agenda-db
+    env_file:
+      - .env
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - leds-network
+
+volumes:
+  pgdata:
+    name: leds-agenda-pgdata
+
+networks:
+  leds-network:
+    name: leds-agenda-network
+    driver: bridge

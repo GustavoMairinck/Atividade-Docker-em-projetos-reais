@@ -77,16 +77,6 @@ Logs do banco:
 docker compose logs -f db
 ```
 
-## Testar a aplicação
-
-```bash
-curl http://localhost:8000
-```
-
-```bash
-curl http://localhost:8000/banco
-```
-
 ## Hot reload
 
 A pasta local `src` é montada dentro do contêiner:
